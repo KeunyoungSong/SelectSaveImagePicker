@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="handle_bar_description">#9F9F9F</color>
+    <color name="default_item_image_picker_stroke">#007f5f</color>
+    <color name="item_indicator_background">#C8FFFFFF</color>
+    <color name="item_indicator_stroke">#7E7E7E</color>
+</resources>

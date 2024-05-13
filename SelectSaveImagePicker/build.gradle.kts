@@ -42,9 +42,7 @@ dependencies {
 	implementation(libs.androidx.appcompat)
 	implementation(libs.material)
 	
-	// swipe refreshLayout for recyclerView
 	implementation(libs.androidx.swiperefreshlayout)
-	
-	
+	implementation (libs.glide)
 	
 }

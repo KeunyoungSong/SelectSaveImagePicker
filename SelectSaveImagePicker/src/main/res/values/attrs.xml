@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ImagePickerItemView">
+        <attr name="isSelected" format="boolean" />
+        <attr name="indicatorNumber" format="integer" />
+        <attr name="indicatorNumberColor" format="color" />
+        <attr name="itemStrokeSize" format="integer" />
+        <attr name="selectionColor" format="color" />
+    </declare-styleable>
+</resources>
