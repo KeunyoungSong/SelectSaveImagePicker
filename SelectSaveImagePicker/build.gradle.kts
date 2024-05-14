@@ -44,5 +44,7 @@ dependencies {
 	
 	implementation(libs.androidx.swiperefreshlayout)
 	implementation (libs.glide)
+	implementation (libs.androidx.lifecycle.viewmodel.ktx)
+	
 	
 }
