@@ -48,6 +48,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_images"
+            android:paddingBottom="400dp"
+            android:clipToPadding="false"
             android:nestedScrollingEnabled="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
