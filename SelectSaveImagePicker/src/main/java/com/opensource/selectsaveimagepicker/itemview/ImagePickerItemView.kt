@@ -1,4 +1,4 @@
-package com.opensource.selectsaveimagepicker
+package com.opensource.selectsaveimagepicker.itemview
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -9,7 +9,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import com.bumptech.glide.Glide
-import com.opensource.selectsaveimagepicker.databinding.ItemImagePickerBinding
+import com.opensource.selectsaveimagepicker.R
+import com.opensource.selectsaveimagepicker.databinding.ImagePickerItemViewBinding
 
 class ImagePickerItemView @JvmOverloads constructor(
 	context: Context,
@@ -21,7 +22,7 @@ class ImagePickerItemView @JvmOverloads constructor(
 	defStyleAttr
 ) {
 	
-	private var binding: ItemImagePickerBinding = ItemImagePickerBinding.inflate(
+	private var binding: ImagePickerItemViewBinding = ImagePickerItemViewBinding.inflate(
 		LayoutInflater.from(context),
 		this,
 		true
@@ -119,7 +120,7 @@ class ImagePickerItemView @JvmOverloads constructor(
 	}
 	
 	fun loadImage(url: String) {
-		Glide.with(context).load(url).into(binding.ivImage)
+		Glide.with(context).load(url).centerCrop().into(binding.ivImage)
 	}
 	
 	private fun Int.toPx(): Int {
