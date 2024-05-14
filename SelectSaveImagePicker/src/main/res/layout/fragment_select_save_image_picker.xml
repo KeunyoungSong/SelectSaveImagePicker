@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
             android:gravity="center"
-            android:text="@string/handle_bar_description"
+            android:text="@string/description_bottom_sheet"
             android:textColor="@color/handle_bar_description"
             app:layout_constraintBottom_toBottomOf="@id/handlebar"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,13 +36,59 @@
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/layout_images_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_images"
+            android:nestedScrollingEnabled="false"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_permission_request"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_request_permission"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/button_request_permission"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_permission_explanation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/permission_explanation_gallery_access"
+            android:textColor="#aaa"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_request_permission" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </LinearLayout>
