@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="handle_bar_description">When the selection is complete, Click the button below.</string>
+    <string name="description_bottom_sheet">When the selection is complete, Click the button below.</string>
+    <string name="button_request_permission">Request Image Access</string>
+    <string name="permission_explanation_gallery_access">This app requires access to your gallery to select and manage images. Please grant permission to continue.</string>
 </resources>

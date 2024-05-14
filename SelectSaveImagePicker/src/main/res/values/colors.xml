@@ -4,4 +4,5 @@
     <color name="default_item_image_picker_stroke">#007f5f</color>
     <color name="item_indicator_background">#C8FFFFFF</color>
     <color name="item_indicator_stroke">#7E7E7E</color>
+    <color name="button_request_permission">#aaa</color>
 </resources>
