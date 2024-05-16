@@ -10,25 +10,34 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 class ImageRepository(private val context: Context) {
-	fun loadImages(preselectedImages: List<String>? = null): Flow<List<Image>> = flow {
+	
+	fun loadImages(): Flow<List<Image>> = flow {
 		val images = mutableListOf<Image>()
 		val projection = arrayOf(MediaStore.Images.Media._ID)
 		val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 		
 		val cursor = context.contentResolver.query(
-			MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null, null, sortOrder
+			MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+			projection,
+			null,
+			null,
+			sortOrder
 		)
 		
 		cursor?.use {
 			val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
 			while (cursor.moveToNext()) {
 				val id = cursor.getLong(idColumn)
-				val contentUri: Uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id.toString())
-				if (preselectedImages != null && preselectedImages.contains(contentUri.toString())) {
-					images.add(Image(contentUri.toString(), true))
-				} else {
-					images.add(Image(contentUri.toString(), false))
-				}
+				val contentUri: Uri = Uri.withAppendedPath(
+					MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+					id.toString()
+				)
+				images.add(
+					Image(
+						contentUri.toString(),
+						false
+					)
+				)
 			}
 		}
 		emit(images)  // Emit the list of images as a single batch

@@ -1,5 +1,6 @@
 package com.opensource.selectsaveimagepicker.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -12,14 +13,17 @@ class ImagePickerAdapter(
 	private val onImageSelected: (Image) -> Unit
 ) : ListAdapter<Image, ImagePickerAdapter.ImageViewHolder>(DiffCallback()) {
 	
-	inner class ImageViewHolder(private val binding: ItemImageBinding) : RecyclerView.ViewHolder(binding.root) {
+	inner class ImageViewHolder(private val binding: ItemImageBinding) :
+		RecyclerView.ViewHolder(binding.root) {
 		
 		fun bind(image: Image) {
+			binding.imagePickerItem.setOnClickListener {
+				onImageSelected(image)
+			}
 			binding.imagePickerItem.apply {
 				loadImage(image.uri)
 				isSelected = image.isSelected
-			}.setOnClickListener {
-				onImageSelected(image)
+				setIndicatorNumber(image.selectionOrder)
 			}
 		}
 	}
@@ -54,6 +58,7 @@ class ImagePickerAdapter(
 		override fun areContentsTheSame(
 			oldItem: Image,
 			newItem: Image
-		): Boolean = oldItem == newItem
+		): Boolean =
+			oldItem.isSelected == newItem.isSelected && oldItem.selectionOrder == newItem.selectionOrder
 	}
 }

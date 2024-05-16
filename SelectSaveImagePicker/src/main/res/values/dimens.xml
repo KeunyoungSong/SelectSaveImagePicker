@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="item_size">48dp</dimen>
-    <dimen name="item_stroke_size">16dp</dimen>
+    <dimen name="item_stroke_size">6dp</dimen>
+    <dimen name="item_indicator_size">28dp</dimen>
 </resources>

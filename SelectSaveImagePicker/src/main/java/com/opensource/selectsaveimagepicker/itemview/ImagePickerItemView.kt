@@ -29,7 +29,7 @@ class ImagePickerItemView @JvmOverloads constructor(
 	)
 	
 	private var isSelected: Boolean = false
-	private var indicatorNumber: Int = 0
+	private var indicatorNumber: Int = -1
 	private var indicatorNumberColor: Int = Color.BLACK
 	private var itemStrokeSize: Int = context.resources.getDimensionPixelSize(R.dimen.item_stroke_size)
 	private var selectionColor: Int = ContextCompat.getColor(
@@ -106,17 +106,18 @@ class ImagePickerItemView @JvmOverloads constructor(
 	
 	private fun updateView() {
 		// 텍스트 뷰 업데이트
-		binding.tvSelectionIndicator.text = if (isSelected) indicatorNumber.toString() else ""
-		binding.tvSelectionIndicator.setTextColor(indicatorNumberColor)
-		binding.tvSelectionIndicator.setBackgroundResource(if (isSelected) R.drawable.ic_selected else R.drawable.ic_unselected)
+		binding.tvIndicator.text = if (isSelected) indicatorNumber.toString() else ""
+		binding.tvIndicator.setTextColor(indicatorNumberColor)
+		binding.tvIndicator.setBackgroundResource(if (isSelected) R.drawable.ic_selected else R.drawable.ic_unselected)
 		
 		// 배경 및 틴트 색상 설정
 		binding.vBackground.setBackgroundColor(selectionColor)
-		binding.tvSelectionIndicator.backgroundTintList =
+		binding.tvIndicator.backgroundTintList =
 			if (isSelected) ColorStateList.valueOf(selectionColor) else null
 		
 		// 이미지 뷰 패딩 설정 (테두리 크기를 패딩으로 사용)
 		binding.ivImage.setPadding(if (isSelected) itemStrokeSize else 0)
+		
 	}
 	
 	fun loadImage(url: String) {
