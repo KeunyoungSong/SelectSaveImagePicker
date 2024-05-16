@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <style name="ImagePicker.BottomSheet.DragHandle" parent="Widget.Material3.BottomSheet.DragHandle">
-        <item name="tint">#333333</item>
-        <item name="android:alpha">0.5</item>
-    </style>
-
-</resources>

@@ -30,11 +30,11 @@ class ImagePickerItemView @JvmOverloads constructor(
 	
 	private var isSelected: Boolean = false
 	private var indicatorNumber: Int = -1
-	private var indicatorNumberColor: Int = Color.BLACK
+	private var indicatorNumberColor: Int = Color.WHITE
 	private var itemStrokeSize: Int = context.resources.getDimensionPixelSize(R.dimen.item_stroke_size)
 	private var selectionColor: Int = ContextCompat.getColor(
 		context,
-		R.color.default_item_image_picker_stroke
+		R.color.primary
 	)
 	
 	init {

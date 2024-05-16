@@ -6,11 +6,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.opensource.selectsaveimagepicker.repository.ImageRepository
 import com.opensource.selectsaveimagepicker.data.Image
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 internal sealed class ImagePickerEvent {
 	
@@ -21,9 +24,14 @@ internal sealed class ImagePickerEvent {
 	data class LongClickImage(
 		val image: Image
 	) : ImagePickerEvent()
+	
+	object ReachedMaxSelection : ImagePickerEvent()
+	object PermissionGranted : ImagePickerEvent()
+	object ReloadImages : ImagePickerEvent()
 }
 
 internal class SelectSaveImagePickerViewModel(
+	private val maxSelection: Int = 5,
 	private val repository: ImageRepository,
 ) : ViewModel() {
 	
@@ -31,24 +39,23 @@ internal class SelectSaveImagePickerViewModel(
 	private val _images = MutableStateFlow<List<Image>>(emptyList())
 	val images: StateFlow<List<Image>> = _images
 	
+	private val _event = MutableSharedFlow<ImagePickerEvent>(
+		extraBufferCapacity = 10,
+		onBufferOverflow = BufferOverflow.DROP_LATEST
+	)
+	val event: MutableSharedFlow<ImagePickerEvent> = _event
+	
 	private var _selectedImages = mutableMapOf<String, Int>()
 	
-	private val _event = MutableSharedFlow<Image>()
-	val event: MutableSharedFlow<Image> = _event
+	private val _selectedImagesCount = MutableStateFlow(0)
+	val selectedImagesCount: StateFlow<Int> = _selectedImagesCount
+	
 	
 	init {
-		Log.d(
-			"PickerViewModel",
-			"Initializing ViewModel..."
-		)
 		loadImages()
-	}
-	
-	override fun onCleared() {
-		super.onCleared()
 		Log.d(
 			"PickerViewModel",
-			"ViewModel onCleared called"
+			"init ViewModel..."
 		)
 	}
 	
@@ -56,22 +63,29 @@ internal class SelectSaveImagePickerViewModel(
 		when (event) {
 			is ImagePickerEvent.LongClickImage -> Unit
 			is ImagePickerEvent.ToggleImage -> toggleImageSelection(event.image)
+			ImagePickerEvent.PermissionGranted -> permissionGranted()
+			else -> Unit
 		}
+	}
+	
+	private fun permissionGranted() {
+		if (_selectedImagesCount.value != 0) return
+		loadImages()
 	}
 	
 	fun loadImages() {
 		viewModelScope.launch {
-			repository.loadImages().collect {
-				_images.value = it
+			repository.loadImages().collect { newImages ->
+				_images.value = newImages
 			}
 		}
 	}
 	
 	private fun toggleImageSelection(selectedImage: Image) {
-		Log.d(
-			"Toggle",
-			"SelectedImage: $selectedImage"
-		)
+		if (_selectedImagesCount.value >= maxSelection && selectedImage.isSelected.not()) {
+			_event.tryEmit(ImagePickerEvent.ReachedMaxSelection)
+			return
+		}
 		val currentImages = _images.value.toMutableList()
 		val index = currentImages.indexOfFirst { it.uri == selectedImage.uri }
 		if (index != -1) {
@@ -88,7 +102,12 @@ internal class SelectSaveImagePickerViewModel(
 			
 			currentImages[index] = toggledImage
 			reorderSelections(currentImages)
+			updateSelectedImageCount()
 		}
+	}
+	
+	private fun updateSelectedImageCount() {
+		_selectedImagesCount.value = _selectedImages.size
 	}
 	
 	private fun reorderSelections(updatedList: MutableList<Image>) {
@@ -105,7 +124,10 @@ internal class SelectSaveImagePickerViewModel(
 	}
 }
 
-class ViewModelFactory(private val repository: ImageRepository) : ViewModelProvider.Factory {
+class ViewModelFactory(
+	private val maxSelection: Int,
+	private val repository: ImageRepository
+) : ViewModelProvider.Factory {
 	
 	
 	override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -114,7 +136,10 @@ class ViewModelFactory(private val repository: ImageRepository) : ViewModelProvi
 				"PickerViewModel",
 				"Creating ViewModel..."
 			)
-			@Suppress("UNCHECKED_CAST") return SelectSaveImagePickerViewModel(repository) as T
+			@Suppress("UNCHECKED_CAST") return SelectSaveImagePickerViewModel(
+				maxSelection = maxSelection,
+				repository = repository
+			) as T
 		}
 		throw IllegalArgumentException("Unknown ViewModel class")
 	}
