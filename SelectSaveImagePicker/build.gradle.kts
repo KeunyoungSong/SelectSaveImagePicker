@@ -45,25 +45,19 @@ dependencies {
 	implementation(libs.material)
 	
 	implementation(libs.androidx.swiperefreshlayout)
-	implementation (libs.glide)
-	implementation (libs.androidx.lifecycle.viewmodel.ktx)
+	implementation(libs.glide)
+	implementation(libs.androidx.lifecycle.viewmodel.ktx)
 	implementation(libs.androidx.fragment.ktx)
 }
 
-afterEvaluate {
-	publishing {
-		publications {
+publishing {
+	publications {
+		afterEvaluate {
 			register<MavenPublication>("release") {
 				from(components["release"])
 				groupId = "com.github.KeunyoungSong" // GitHub 사용자 이름
 				artifactId = "SelectSaveImagePicker"
 				version = "1.0"
-			}
-		}
-		repositories {
-			// Configure JitPack repository
-			maven {
-				url = uri("https://jitpack.io")
 			}
 		}
 	}
