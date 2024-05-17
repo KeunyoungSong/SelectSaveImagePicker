@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,10 +26,7 @@ import com.opensource.selectsaveimagepicker.viewmodel.SelectSaveImagePickerViewM
 import com.opensource.selectsaveimagepicker.viewmodel.ViewModelFactory
 import kotlinx.coroutines.launch
 
-class SelectSaveImagePicker(
-	private val config: PickerConfig,
-	private val onSelectionComplete: ((List<String>) -> Unit),
-) : BottomSheetDialogFragment() {
+class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 	
 	private var _binding: FragmentSelectSaveImagePickerBinding? = null
 	private val binding get() = _binding!!
@@ -44,6 +42,29 @@ class SelectSaveImagePicker(
 	private lateinit var permissionRequester: PermissionRequester
 	
 	private var spanCount: Int = 3
+	private lateinit var config: PickerConfig
+	private var listener: OnSelectionCompleteListener? = null
+	
+	interface OnSelectionCompleteListener {
+		
+		fun onSelectionComplete(selectedImages: List<String>)
+	}
+	
+	companion object {
+		
+		private const val ARG_CONFIG = "picker_config"
+		
+		fun newInstance(config: PickerConfig): SelectSaveImagePicker {
+			return SelectSaveImagePicker().apply {
+				arguments = Bundle().apply {
+					putParcelable(
+						ARG_CONFIG,
+						config
+					)
+				}
+			}
+		}
+	}
 	
 	override fun onCreateView(
 		inflater: LayoutInflater,
@@ -66,6 +87,9 @@ class SelectSaveImagePicker(
 			view,
 			savedInstanceState
 		)
+		
+		config = arguments?.getParcelable(ARG_CONFIG)!!
+		
 		if (isLandscape()) {
 			spanCount = 5
 		} else {
@@ -82,6 +106,9 @@ class SelectSaveImagePicker(
 	override fun onResume() {
 		super.onResume()
 		checkPermissionsAndUpdateVisibility()
+		listener = activity as? OnSelectionCompleteListener
+		Log.d("Picker", "Listener: $listener")
+		
 	}
 	
 	override fun onDestroyView() {
@@ -144,18 +171,23 @@ class SelectSaveImagePicker(
 		binding.tvAddCount.setTextColor(config.themeColor)
 	}
 	
-	private fun setupImagePickerAdapter() {
-		// Initialize the adapter with the configuration
+	private fun setupImagePickerAdapter() {        // Initialize the adapter with the configuration
 		imagePickerAdapter = ImagePickerAdapter(config) {
 			viewModel.handleEvent(ImagePickerEvent.ToggleImage(it))
 		}
 		
 		// Set up RecyclerView layout manager
-		val layoutManager = GridLayoutManager(context, spanCount)
+		val layoutManager = GridLayoutManager(
+			context,
+			spanCount
+		)
 		binding.rvImages.layoutManager = layoutManager
 		
 		// Add item decoration for spacing
-		val itemDecoration = GridSpacingItemDecoration(spanCount, config.itemSpacing)
+		val itemDecoration = GridSpacingItemDecoration(
+			spanCount,
+			config.itemSpacing
+		)
 		binding.rvImages.addItemDecoration(itemDecoration)
 		
 		// Set up the RecyclerView with the adapter
@@ -165,7 +197,6 @@ class SelectSaveImagePicker(
 		binding.rvImages.setItemViewCacheSize(30)
 		binding.rvImages.setHasFixedSize(true)
 	}
-
 	
 	private fun initListener() {
 		binding.btnRequestPermission.setOnClickListener {
@@ -179,8 +210,8 @@ class SelectSaveImagePicker(
 			}
 		}
 		binding.tvAddButton.setOnClickListener {
-			if(config.clearSelectionOnComplete) clearSelectedImages()
-			onSelectionComplete(viewModel.selectedImage)
+			listener?.onSelectionComplete(viewModel.selectedImage)
+			if (config.clearSelectionOnComplete) clearSelectedImages()
 			dismiss()
 		}
 		
