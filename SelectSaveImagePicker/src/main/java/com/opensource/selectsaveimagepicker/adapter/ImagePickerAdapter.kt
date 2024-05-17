@@ -1,15 +1,16 @@
 package com.opensource.selectsaveimagepicker.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.opensource.selectsaveimagepicker.PickerConfig
 import com.opensource.selectsaveimagepicker.data.Image
 import com.opensource.selectsaveimagepicker.databinding.ItemImageBinding
 
 class ImagePickerAdapter(
+	private val pickerConfig: PickerConfig,
 	private val onImageSelected: (Image) -> Unit
 ) : ListAdapter<Image, ImagePickerAdapter.ImageViewHolder>(DiffCallback()) {
 	
@@ -21,9 +22,12 @@ class ImagePickerAdapter(
 				onImageSelected(image)
 			}
 			binding.imagePickerItem.apply {
-				loadImage(image.uri)
 				isSelected = image.isSelected
 				setIndicatorNumber(image.selectionOrder)
+				setIndicatorNumberColor(pickerConfig.indicatorNumberColor)
+				setThemeColor(pickerConfig.themeColor)
+				setItemStrokeWidth(pickerConfig.itemStrokeWidth)
+				loadImage(image.uri)
 			}
 		}
 	}

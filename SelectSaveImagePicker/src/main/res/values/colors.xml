@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#FF399D74</color>
+    <color name="themeColor">#FF399D74</color>
     <color name="handle_bar_description">#9F9F9F</color>
     <color name="item_indicator_background">#C8FFFFFF</color>
     <color name="item_indicator_stroke">#7E7E7E</color>
@@ -9,5 +9,5 @@
     <color name="button_disabled">#aaa</color>
     <color name="button_enabled">#393939</color>
     <color name="white_text">#fff</color>
-
+    <color name="indicator_text">#fff</color>
 </resources>

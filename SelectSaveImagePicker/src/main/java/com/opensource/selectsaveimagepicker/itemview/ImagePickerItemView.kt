@@ -32,101 +32,67 @@ class ImagePickerItemView @JvmOverloads constructor(
 	private var indicatorNumber: Int = -1
 	private var indicatorNumberColor: Int = Color.WHITE
 	private var itemStrokeSize: Int = context.resources.getDimensionPixelSize(R.dimen.item_stroke_size)
-	private var selectionColor: Int = ContextCompat.getColor(
-		context,
-		R.color.primary
-	)
+	private var themeColor: Int = ContextCompat.getColor(context, R.color.themeColor)
 	
 	init {
-		context.theme.obtainStyledAttributes(
-			attrs,
-			R.styleable.ImagePickerItemView,
-			0,
-			0
-		).apply {
-			try {
-				isSelected = getBoolean(
-					R.styleable.ImagePickerItemView_isSelected,
-					isSelected
-				)
-				indicatorNumber = getInt(
-					R.styleable.ImagePickerItemView_indicatorNumber,
-					indicatorNumber
-				)
-				indicatorNumberColor = getColor(
-					R.styleable.ImagePickerItemView_indicatorNumberColor,
-					indicatorNumberColor
-				)
-				itemStrokeSize = getInt(
-					R.styleable.ImagePickerItemView_itemStrokeSize,
-					itemStrokeSize
-				)
-				selectionColor = getColor(
-					R.styleable.ImagePickerItemView_selectionColor,
-					selectionColor
-				)
-			} finally {
-				recycle()
-			}
-			updateView()
-		}
+		updateSelectionState()
+		updateIndicator()
+		updateThemeColor()
+		updateItemStroke()
 	}
 	
-	fun setItemStrokeSize(itemStrokeSize: Int) {
-		this.itemStrokeSize = itemStrokeSize.toPx()
-		updateView()
+	fun setItemStrokeWidth(itemStrokeSize: Int) {
+		this.itemStrokeSize = itemStrokeSize
+		updateItemStroke()
 	}
 	
 	fun setIndicatorNumber(indicatorNumber: Int) {
 		this.indicatorNumber = indicatorNumber
-		updateView()
+		updateIndicator()
 	}
 	
 	fun setIndicatorNumberColor(indicatorNumberColor: Int) {
 		this.indicatorNumberColor = indicatorNumberColor
-		updateView()
+		updateIndicator()
 	}
 	
-	fun setSelectionColor(selectionColor: Int) {
-		this.selectionColor = selectionColor
-		updateView()
-	}
-	
-	fun setItemStrokeSizeDp(strokeSizeDp: Int) {
-		itemStrokeSize = strokeSizeDp
-		updateView()
+	fun setThemeColor(selectionColor: Int) {
+		this.themeColor = selectionColor
+		updateThemeColor()
 	}
 	
 	override fun setSelected(isSelected: Boolean) {
 		if (this.isSelected != isSelected) {
 			this.isSelected = isSelected
-			updateView()
+			updateSelectionState()
+			updateIndicator()
+			updateItemStroke()
 		}
 	}
 	
-	private fun updateView() {
-		// 텍스트 뷰 업데이트
+	private fun updateSelectionState() {
+		binding.vBackground.setBackgroundColor(if (isSelected) themeColor else Color.TRANSPARENT)
+	}
+	
+	private fun updateIndicator() {
 		binding.tvIndicator.text = if (isSelected) indicatorNumber.toString() else ""
 		binding.tvIndicator.setTextColor(indicatorNumberColor)
 		binding.tvIndicator.setBackgroundResource(if (isSelected) R.drawable.ic_selected else R.drawable.ic_unselected)
-		
-		// 배경 및 틴트 색상 설정
-		binding.vBackground.setBackgroundColor(selectionColor)
-		binding.tvIndicator.backgroundTintList =
-			if (isSelected) ColorStateList.valueOf(selectionColor) else null
-		
-		// 이미지 뷰 패딩 설정 (테두리 크기를 패딩으로 사용)
+		binding.tvIndicator.backgroundTintList = if (isSelected) ColorStateList.valueOf(themeColor) else null
+	}
+	
+	private fun updateThemeColor() {
+		if (isSelected) {
+			binding.vBackground.setBackgroundColor(themeColor)
+			binding.tvIndicator.backgroundTintList = ColorStateList.valueOf(themeColor)
+		}
+	}
+	
+	private fun updateItemStroke() {
 		binding.ivImage.setPadding(if (isSelected) itemStrokeSize else 0)
-		
 	}
 	
 	fun loadImage(url: String) {
-		Glide.with(context).load(url).centerCrop().into(binding.ivImage)
-	}
-	
-	private fun Int.toPx(): Int {
-		return (this * context.resources.displayMetrics.density + 0.5f).toInt()
+		Glide.with(context).load(url).sizeMultiplier(0.6f).centerCrop().into(binding.ivImage)
 	}
 }
-
-

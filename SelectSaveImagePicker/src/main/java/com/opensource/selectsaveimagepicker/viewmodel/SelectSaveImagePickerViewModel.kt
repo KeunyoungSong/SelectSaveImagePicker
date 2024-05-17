@@ -1,19 +1,15 @@
 package com.opensource.selectsaveimagepicker.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.opensource.selectsaveimagepicker.repository.ImageRepository
 import com.opensource.selectsaveimagepicker.data.Image
-import kotlinx.coroutines.Dispatchers
+import com.opensource.selectsaveimagepicker.repository.ImageRepository
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 internal sealed class ImagePickerEvent {
 	
@@ -27,7 +23,6 @@ internal sealed class ImagePickerEvent {
 	
 	object ReachedMaxSelection : ImagePickerEvent()
 	object PermissionGranted : ImagePickerEvent()
-	object ReloadImages : ImagePickerEvent()
 }
 
 internal class SelectSaveImagePickerViewModel(
@@ -46,6 +41,8 @@ internal class SelectSaveImagePickerViewModel(
 	val event: MutableSharedFlow<ImagePickerEvent> = _event
 	
 	private var _selectedImages = mutableMapOf<String, Int>()
+	val selectedImage: List<String>
+		get() = _selectedImages.map { it.key }
 	
 	private val _selectedImagesCount = MutableStateFlow(0)
 	val selectedImagesCount: StateFlow<Int> = _selectedImagesCount
@@ -53,10 +50,6 @@ internal class SelectSaveImagePickerViewModel(
 	
 	init {
 		loadImages()
-		Log.d(
-			"PickerViewModel",
-			"init ViewModel..."
-		)
 	}
 	
 	fun handleEvent(event: ImagePickerEvent) {
@@ -122,6 +115,12 @@ internal class SelectSaveImagePickerViewModel(
 		}
 		_images.value = updatedList
 	}
+	
+	fun clearSelectedImages() {
+		_selectedImages.clear()
+		_selectedImagesCount.value = 0
+		loadImages()
+	}
 }
 
 class ViewModelFactory(
@@ -132,10 +131,6 @@ class ViewModelFactory(
 	
 	override fun <T : ViewModel> create(modelClass: Class<T>): T {
 		if (modelClass.isAssignableFrom(SelectSaveImagePickerViewModel::class.java)) {
-			Log.d(
-				"PickerViewModel",
-				"Creating ViewModel..."
-			)
 			@Suppress("UNCHECKED_CAST") return SelectSaveImagePickerViewModel(
 				maxSelection = maxSelection,
 				repository = repository
