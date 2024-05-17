@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -170,31 +169,28 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 		binding.tvAddCount.setTextColor(config.themeColor)
 	}
 	
-	private fun setupImagePickerAdapter() {        // Initialize the adapter with the configuration
+	private fun setupImagePickerAdapter() {
 		imagePickerAdapter = ImagePickerAdapter(config) {
 			viewModel.handleEvent(ImagePickerEvent.ToggleImage(it))
 		}
 		
-		// Set up RecyclerView layout manager
 		val layoutManager = GridLayoutManager(
 			context,
 			spanCount
 		)
 		binding.rvImages.layoutManager = layoutManager
 		
-		// Add item decoration for spacing
 		val itemDecoration = GridSpacingItemDecoration(
 			spanCount,
 			config.itemSpacing
 		)
 		binding.rvImages.addItemDecoration(itemDecoration)
 		
-		// Set up the RecyclerView with the adapter
 		binding.rvImages.adapter = imagePickerAdapter
 		
-		// Optimize RecyclerView performance
 		binding.rvImages.setItemViewCacheSize(config.itemViewCacheSize)
 		binding.rvImages.setHasFixedSize(true)
+		binding.rvImages.itemAnimator = null
 	}
 	
 	private fun initListener() {
