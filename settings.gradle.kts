@@ -20,4 +20,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ImagePicker"
+include(":app")
 include(":SelectSaveImagePicker")
