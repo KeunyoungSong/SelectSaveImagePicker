@@ -25,7 +25,9 @@ class MainActivity : AppCompatActivity(), SelectSaveImagePicker.OnSelectionCompl
 				.setItemStrokeWidth(4) // 4 픽셀 스트로크 너비
 				.setThemeColor(ContextCompat.getColor(this, color.themeColor))
 				.setDescriptionText("Please select images") // 사용자 정의 설명 텍스트
-				.setClearSelectionOnComplete(true)
+				.setClearSelectionOnComplete(false)
+				.setItemViewCacheSize(30)
+				.setThumbnailScale(0.5f)
 				.build()
 			
 			val imagePicker = SelectSaveImagePicker.newInstance(customPickerConfig)

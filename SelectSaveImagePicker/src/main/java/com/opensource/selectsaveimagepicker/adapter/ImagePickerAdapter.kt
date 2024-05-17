@@ -28,6 +28,7 @@ class ImagePickerAdapter(
 				setThemeColor(pickerConfig.themeColor)
 				setItemStrokeWidth(pickerConfig.itemStrokeWidth)
 				loadImage(image.uri)
+				setThumbnailScale(pickerConfig.thumbnailScale)
 			}
 		}
 	}

@@ -107,7 +107,6 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 		super.onResume()
 		checkPermissionsAndUpdateVisibility()
 		listener = activity as? OnSelectionCompleteListener
-		Log.d("Picker", "Listener: $listener")
 		
 	}
 	
@@ -194,7 +193,7 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 		binding.rvImages.adapter = imagePickerAdapter
 		
 		// Optimize RecyclerView performance
-		binding.rvImages.setItemViewCacheSize(30)
+		binding.rvImages.setItemViewCacheSize(config.itemViewCacheSize)
 		binding.rvImages.setHasFixedSize(true)
 	}
 	

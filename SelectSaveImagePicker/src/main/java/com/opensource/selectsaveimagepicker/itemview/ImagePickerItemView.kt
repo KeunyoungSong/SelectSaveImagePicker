@@ -33,6 +33,7 @@ class ImagePickerItemView @JvmOverloads constructor(
 	private var indicatorNumberColor: Int = Color.WHITE
 	private var itemStrokeSize: Int = context.resources.getDimensionPixelSize(R.dimen.item_stroke_size)
 	private var themeColor: Int = ContextCompat.getColor(context, R.color.themeColor)
+	private var thumbnailScale: Float = 0.5f
 	
 	init {
 		updateSelectionState()
@@ -59,6 +60,10 @@ class ImagePickerItemView @JvmOverloads constructor(
 	fun setThemeColor(selectionColor: Int) {
 		this.themeColor = selectionColor
 		updateThemeColor()
+	}
+	
+	fun setThumbnailScale(thumbnailScale: Float) {
+		this.thumbnailScale = thumbnailScale
 	}
 	
 	override fun setSelected(isSelected: Boolean) {
@@ -93,6 +98,6 @@ class ImagePickerItemView @JvmOverloads constructor(
 	}
 	
 	fun loadImage(url: String) {
-		Glide.with(context).load(url).sizeMultiplier(0.6f).centerCrop().into(binding.ivImage)
+		Glide.with(context).load(url).sizeMultiplier(thumbnailScale).centerCrop().into(binding.ivImage)
 	}
 }
