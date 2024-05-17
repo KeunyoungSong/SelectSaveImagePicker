@@ -2,6 +2,7 @@ plugins {
 	alias(libs.plugins.androidLibrary)
 	alias(libs.plugins.jetbrainsKotlinAndroid)
 	id("kotlin-parcelize")
+	id("maven-publish")
 }
 
 android {
@@ -47,7 +48,24 @@ dependencies {
 	implementation (libs.glide)
 	implementation (libs.androidx.lifecycle.viewmodel.ktx)
 	implementation(libs.androidx.fragment.ktx)
-	
-	
-	
 }
+
+afterEvaluate {
+	publishing {
+		publications {
+			register<MavenPublication>("release") {
+				from(components["release"])
+				groupId = "com.github.KeunyoungSong" // GitHub 사용자 이름
+				artifactId = "SelectSaveImagePicker"
+				version = "1.0"
+			}
+		}
+		repositories {
+			// Configure JitPack repository
+			maven {
+				url = uri("https://jitpack.io")
+			}
+		}
+	}
+}
+
