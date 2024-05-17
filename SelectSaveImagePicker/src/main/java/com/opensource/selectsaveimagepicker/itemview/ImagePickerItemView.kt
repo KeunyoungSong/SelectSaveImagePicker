@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -31,7 +32,7 @@ class ImagePickerItemView @JvmOverloads constructor(
 	private var isSelected: Boolean = false
 	private var indicatorNumber: Int = -1
 	private var indicatorNumberColor: Int = Color.WHITE
-	private var itemStrokeSize: Int = context.resources.getDimensionPixelSize(R.dimen.item_stroke_size)
+	private var itemStrokeSize: Int = 6
 	private var themeColor: Int = ContextCompat.getColor(context, R.color.themeColor)
 	private var thumbnailScale: Float = 0.5f
 	
@@ -94,10 +95,19 @@ class ImagePickerItemView @JvmOverloads constructor(
 	}
 	
 	private fun updateItemStroke() {
-		binding.ivImage.setPadding(if (isSelected) itemStrokeSize else 0)
+		binding.ivImage.setPadding(if (isSelected) itemStrokeSize.dpToPx() else 0)
 	}
 	
 	fun loadImage(url: String) {
 		Glide.with(context).load(url).sizeMultiplier(thumbnailScale).centerCrop().into(binding.ivImage)
+	}
+	
+	
+	private fun Int.dpToPx(): Int {
+		return TypedValue.applyDimension(
+			TypedValue.COMPLEX_UNIT_DIP,
+			this.toFloat(),
+			context.resources.displayMetrics
+		).toInt()
 	}
 }

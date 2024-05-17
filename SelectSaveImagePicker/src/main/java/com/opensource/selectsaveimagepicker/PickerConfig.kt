@@ -21,7 +21,7 @@ data class PickerConfig(
 	class Builder(context: Context) {
 		private var itemSpacing: Int = context.resources.getDimensionPixelSize(R.dimen.item_spacing)
 		private var indicatorNumberColor: Int = ContextCompat.getColor(context, R.color.indicator_text)
-		private var itemStrokeWidth: Int = context.resources.getDimensionPixelSize(R.dimen.item_stroke_size)
+		private var itemStrokeWidth: Int = 6
 		private var themeColor: Int = ContextCompat.getColor(context, R.color.themeColor)
 		private var descriptionText: String = context.resources.getString(R.string.description_bottom_sheet)
 		private var maxSelection: Int = 5

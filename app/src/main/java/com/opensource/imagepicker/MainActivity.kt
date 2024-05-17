@@ -20,11 +20,11 @@ class MainActivity : AppCompatActivity(), SelectSaveImagePicker.OnSelectionCompl
 		
 		binding.button.setOnClickListener {
 			val customPickerConfig = PickerConfig.Builder(this)
-				.setItemSpacing(16) // 16 픽셀 간격
-				.setIndicatorNumberColorHex("#FFFFFF") // 흰색 인디케이터 번호 (HEX)
-				.setItemStrokeWidth(4) // 4 픽셀 스트로크 너비
+				.setItemSpacing(16)
+				.setIndicatorNumberColorHex("#FFFFFF")
+				.setItemStrokeWidth(12)
 				.setThemeColor(ContextCompat.getColor(this, color.themeColor))
-				.setDescriptionText("Please select images") // 사용자 정의 설명 텍스트
+				.setDescriptionText("Please select images")
 				.setClearSelectionOnComplete(false)
 				.setItemViewCacheSize(30)
 				.setThumbnailScale(0.5f)

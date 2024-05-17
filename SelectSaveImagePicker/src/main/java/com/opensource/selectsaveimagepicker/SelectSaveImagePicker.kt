@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -99,7 +100,6 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 		initView()
 		initListener()
 		initViewModel()
-		
 	}
 	
 	override fun onResume() {
