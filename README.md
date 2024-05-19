@@ -15,11 +15,24 @@ SelectSaveImagePicker is an Android library for selecting and saving images with
 
 ## Installation
 
-Add the following dependency to your `build.gradle` file:
+Add the following repository to your `settings.gradle.kts` file:
 
-```gradle
+```kts
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven("https://jitpack.io")
+    }
+}
+```
+
+Then add the dependency to your `build.gradle.kts` file:
+
+```kts
 dependencies {
-    implementation ("com.github.KeunyoungSong:SelectSaveImagePicker:version")
+	implementation ("com.github.KeunyoungSong:SelectSaveImagePicker:version")
 }
 ```
 
