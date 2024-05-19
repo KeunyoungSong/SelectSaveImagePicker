@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,8 +32,7 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 	
 	private val viewModel: SelectSaveImagePickerViewModel by activityViewModels {
 		ViewModelFactory(
-			maxSelection = config.maxSelection,
-			repository = ImageRepository(requireContext())
+			maxSelection = config.maxSelection, repository = ImageRepository(requireContext())
 		)
 	}
 	
@@ -46,20 +44,17 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 	private var listener: OnSelectionCompleteListener? = null
 	
 	interface OnSelectionCompleteListener {
-		
 		fun onSelectionComplete(selectedImages: List<String>)
 	}
 	
 	companion object {
-		
 		private const val ARG_CONFIG = "picker_config"
 		
 		fun newInstance(config: PickerConfig): SelectSaveImagePicker {
 			return SelectSaveImagePicker().apply {
 				arguments = Bundle().apply {
 					putParcelable(
-						ARG_CONFIG,
-						config
+						ARG_CONFIG, config
 					)
 				}
 			}
@@ -67,34 +62,20 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 	}
 	
 	override fun onCreateView(
-		inflater: LayoutInflater,
-		container: ViewGroup?,
-		savedInstanceState: Bundle?
+		inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
 	): View {
 		_binding = FragmentSelectSaveImagePickerBinding.inflate(
-			inflater,
-			container,
-			false
+			inflater, container, false
 		)
 		return binding.root
 	}
 	
-	override fun onViewCreated(
-		view: View,
-		savedInstanceState: Bundle?
-	) {
-		super.onViewCreated(
-			view,
-			savedInstanceState
-		)
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+		super.onViewCreated(view, savedInstanceState)
 		
 		config = arguments?.getParcelable(ARG_CONFIG)!!
+		spanCount = if (isLandscape()) 5 else 3
 		
-		if (isLandscape()) {
-			spanCount = 5
-		} else {
-			spanCount = 3
-		}
 		
 		setupPermissionHandling()
 		initView()
@@ -141,20 +122,9 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 	
 	private fun updateAddButton(count: Int) {
 		val isEnabled = count != 0
-		val color = when (isEnabled) {
-			true -> {
-				ContextCompat.getColor(
-					requireContext(),
-					R.color.button_enabled
-				)
-			}
-			false -> {
-				ContextCompat.getColor(
-					requireContext(),
-					R.color.button_disabled
-				)
-			}
-		}
+		val color = ContextCompat.getColor(
+			requireContext(), if (isEnabled) R.color.button_enabled else R.color.button_disabled
+		)
 		binding.tvAddButtonText.setTextColor(color)
 		
 		binding.tvAddCount.apply {
@@ -170,27 +140,18 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 	}
 	
 	private fun setupImagePickerAdapter() {
-		imagePickerAdapter = ImagePickerAdapter(config) {
-			viewModel.handleEvent(ImagePickerEvent.ToggleImage(it))
+		imagePickerAdapter = ImagePickerAdapter(config) { image ->
+			viewModel.handleEvent(ImagePickerEvent.ToggleImage(image))
 		}
 		
-		val layoutManager = GridLayoutManager(
-			context,
-			spanCount
-		)
-		binding.rvImages.layoutManager = layoutManager
-		
-		val itemDecoration = GridSpacingItemDecoration(
-			spanCount,
-			config.itemSpacing
-		)
-		binding.rvImages.addItemDecoration(itemDecoration)
-		
-		binding.rvImages.adapter = imagePickerAdapter
-		
-		binding.rvImages.setItemViewCacheSize(config.itemViewCacheSize)
-		binding.rvImages.setHasFixedSize(true)
-		binding.rvImages.itemAnimator = null
+		binding.rvImages.apply {
+			layoutManager = GridLayoutManager(context, spanCount)
+			addItemDecoration(GridSpacingItemDecoration(spanCount, config.itemSpacing))
+			adapter = imagePickerAdapter
+			setItemViewCacheSize(config.itemViewCacheSize)
+			setHasFixedSize(true)
+			itemAnimator = null
+		}
 	}
 	
 	private fun initListener() {
@@ -219,14 +180,12 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 		val permission = getRequiredPermission()
 		
 		permissionRequester = PermissionRequester(
-			this,
-			permission
+			this, permission
 		)
 		permissionRequester.onPermissionChecked = {
 			updateViewVisibility(
 				ContextCompat.checkSelfPermission(
-					requireContext(),
-					permission
+					requireContext(), permission
 				) == PackageManager.PERMISSION_GRANTED
 			)
 		}
@@ -243,8 +202,7 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 		val permission = getRequiredPermission()
 		updateViewVisibility(
 			ContextCompat.checkSelfPermission(
-				requireContext(),
-				permission
+				requireContext(), permission
 			) == PackageManager.PERMISSION_GRANTED
 		)
 	}
@@ -258,16 +216,14 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 	}
 	
 	private fun showMaxSelectionDialog() {
-		val dialog = AlertDialog.Builder(
-			requireContext(),
-			R.style.AlertDialog
-		).setMessage(R.string.maximum_image_selection_reached)
-			.setPositiveButton(android.R.string.ok) { dialog, _ ->
-				dialog.dismiss()
-			}.create()
-		
-		dialog.show()
-		dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.default_black))
+		AlertDialog.Builder(requireContext(), R.style.AlertDialog)
+			.setMessage(R.string.maximum_image_selection_reached)
+			.setPositiveButton(android.R.string.ok) { dialog, _ -> dialog.dismiss() }
+			.create()
+			.apply {
+				show()
+				getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(resources.getColor(R.color.default_black))
+			}
 	}
 	
 	private fun isLandscape(): Boolean {
