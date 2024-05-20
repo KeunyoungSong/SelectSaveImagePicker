@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
 import android.Manifest
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -30,23 +31,20 @@ class PermissionRequester(
 	
 	private fun setupPermissionLauncher() {
 		permissionLauncher = fragment.registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-			handlePermissionResult(isGranted)  // Refactored: Handle permission result in a separate method
+			handlePermissionResult(isGranted)
 		}
 	}
 	
 	fun requestPermission() {
-		if (fragment.shouldShowRequestPermissionRationale(permission)) {
-			showRationale()
-		} else {
 			permissionLauncher.launch(permission)
-		}
 	}
 	
-	private fun handlePermissionResult(isGranted: Boolean) {  // Refactored: Separate method to handle permission result
+	private fun handlePermissionResult(isGranted: Boolean) {
 		if (isGranted) {
 			showSnackbar("Permission Granted")
 		} else {
 			if (fragment.shouldShowRequestPermissionRationale(permission)) {
+				Log.d("Show", "2")
 				showRationale()
 			} else {
 				showSettingsRedirect()
@@ -72,7 +70,7 @@ class PermissionRequester(
 			}.show()
 	}
 	
-	private fun showSnackbar(message: String) {  // Refactored: Method to show Snackbar messages
+	private fun showSnackbar(message: String) {
 		Snackbar.make(fragment.requireView(), message, Snackbar.LENGTH_SHORT).show()
 	}
 }

@@ -35,8 +35,7 @@ internal class SelectSaveImagePickerViewModel(
 	val images: StateFlow<List<Image>> = _images
 	
 	private val _event = MutableSharedFlow<ImagePickerEvent>(
-		extraBufferCapacity = 10,
-		onBufferOverflow = BufferOverflow.DROP_LATEST
+		extraBufferCapacity = 10, onBufferOverflow = BufferOverflow.DROP_LATEST
 	)
 	val event: MutableSharedFlow<ImagePickerEvent> = _event
 	
@@ -46,11 +45,6 @@ internal class SelectSaveImagePickerViewModel(
 	
 	private val _selectedImagesCount = MutableStateFlow(0)
 	val selectedImagesCount: StateFlow<Int> = _selectedImagesCount
-	
-	
-	init {
-		loadImages()
-	}
 	
 	fun handleEvent(event: ImagePickerEvent) {
 		when (event) {
@@ -62,7 +56,7 @@ internal class SelectSaveImagePickerViewModel(
 	}
 	
 	private fun permissionGranted() {
-		if (_selectedImagesCount.value != 0) return
+		if(_images.value.isNotEmpty()) return
 		loadImages()
 	}
 	
@@ -124,16 +118,13 @@ internal class SelectSaveImagePickerViewModel(
 }
 
 class ViewModelFactory(
-	private val maxSelection: Int,
-	private val repository: ImageRepository
+	private val maxSelection: Int, private val repository: ImageRepository
 ) : ViewModelProvider.Factory {
-	
 	
 	override fun <T : ViewModel> create(modelClass: Class<T>): T {
 		if (modelClass.isAssignableFrom(SelectSaveImagePickerViewModel::class.java)) {
 			@Suppress("UNCHECKED_CAST") return SelectSaveImagePickerViewModel(
-				maxSelection = maxSelection,
-				repository = repository
+				maxSelection = maxSelection, repository = repository
 			) as T
 		}
 		throw IllegalArgumentException("Unknown ViewModel class")

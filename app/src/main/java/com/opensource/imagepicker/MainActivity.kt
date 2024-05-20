@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.opensource.imagepicker.databinding.ActivityMainBinding
 import com.opensource.selectsaveimagepicker.PickerConfig
+import com.opensource.selectsaveimagepicker.R.*
 import com.opensource.selectsaveimagepicker.SelectSaveImagePicker
 
 class MainActivity : AppCompatActivity(), SelectSaveImagePicker.OnSelectionCompleteListener {
@@ -16,14 +17,13 @@ class MainActivity : AppCompatActivity(), SelectSaveImagePicker.OnSelectionCompl
 		super.onCreate(savedInstanceState)
 		binding = ActivityMainBinding.inflate(layoutInflater)
 		setContentView(binding.root)
-		
 		binding.button.setOnClickListener {
 			val customPickerConfig = PickerConfig.Builder(this)
+				.setMaxSelection(5)
+				.setThemeColor(ContextCompat.getColor(this, color.themeColor))
 				.setItemSpacing(12)
 				.setIndicatorNumberColorHex("#FFFFFF")
 				.setItemStrokeWidth(4)
-				.setMaxSelection(20)
-				.setThemeColor(ContextCompat.getColor(this, R.color.black))
 				.setDescriptionText("Please select images")
 				.setClearSelectionOnComplete(true)
 				.setItemViewCacheSize(30)
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity(), SelectSaveImagePicker.OnSelectionCompl
 				.build()
 			
 			val imagePicker = SelectSaveImagePicker.newInstance(customPickerConfig)
-			imagePicker.show(supportFragmentManager, "PICKER")
+			imagePicker.show(supportFragmentManager, "IMAGE_PICKER")
 		}
 	}
 	

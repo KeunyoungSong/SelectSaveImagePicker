@@ -40,6 +40,6 @@ class ImageRepository(private val context: Context) {
 				)
 			}
 		}
-		emit(images)  // Emit the list of images as a single batch
-	}.flowOn(Dispatchers.IO)  // Perform database operations on the I/O dispatcher
+		emit(images)
+	}.flowOn(Dispatchers.IO)
 }
