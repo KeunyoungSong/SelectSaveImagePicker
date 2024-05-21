@@ -50,8 +50,6 @@ val customPickerConfig = PickerConfig.Builder(this)
   .setItemStrokeWidth(4)
   .setThemeColor(ContextCompat.getColor(this, color.themeColor))
   .setDescriptionText("Please select images")
-  .setClearSelectionOnComplete(true)
-  .setItemViewCacheSize(30)
   .setThumbnailScale(0.8f)
   .build()
 
