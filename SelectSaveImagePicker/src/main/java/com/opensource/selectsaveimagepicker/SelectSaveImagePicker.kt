@@ -145,10 +145,13 @@ class SelectSaveImagePicker() : BottomSheetDialogFragment() {
 		}
 		
 		binding.rvImages.apply {
-			layoutManager = GridLayoutManager(context, spanCount)
+			layoutManager = GridLayoutManager(context, spanCount).apply {
+				initialPrefetchItemCount = config.prefetchItemCount
+			}
 			addItemDecoration(GridSpacingItemDecoration(spanCount, config.itemSpacing))
 			adapter = imagePickerAdapter
 			setItemViewCacheSize(config.itemViewCacheSize)
+			recycledViewPool.setMaxRecycledViews(R.layout.image_picker_item_view, config.maxRecycledViews)
 			setHasFixedSize(true)
 			itemAnimator = null
 		}

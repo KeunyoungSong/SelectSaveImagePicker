@@ -5,9 +5,8 @@ import android.os.Parcelable
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import kotlinx.parcelize.Parcelize
-
 @Parcelize
-data class PickerConfig(
+class PickerConfig(
 	val itemSpacing: Int,
 	@ColorInt val indicatorNumberColor: Int,
 	val itemStrokeWidth: Int,
@@ -16,7 +15,9 @@ data class PickerConfig(
 	val maxSelection: Int,
 	val clearSelectionOnComplete: Boolean,
 	val itemViewCacheSize: Int,
-	val thumbnailScale: Float
+	val thumbnailScale: Float,
+	val prefetchItemCount: Int,
+	val maxRecycledViews: Int
 ) : Parcelable {
 	class Builder(context: Context) {
 		private var itemSpacing: Int = context.resources.getDimensionPixelSize(R.dimen.item_spacing)
@@ -26,8 +27,10 @@ data class PickerConfig(
 		private var descriptionText: String = context.resources.getString(R.string.description_bottom_sheet)
 		private var maxSelection: Int = 5
 		private var clearSelectionOnComplete: Boolean = false
-		private var itemViewCacheSize: Int = 30
+		private var itemViewCacheSize: Int = 10
 		private var thumbnailScale: Float = 0.5f
+		private var prefetchItemCount: Int = 20
+		private var maxRecycledViews: Int = 20
 		
 		fun setItemSpacing(itemSpacing: Int) = apply { this.itemSpacing = itemSpacing }
 		fun setIndicatorNumberColor(@ColorInt indicatorNumberColor: Int) = apply { this.indicatorNumberColor = indicatorNumberColor }
@@ -40,6 +43,8 @@ data class PickerConfig(
 		fun setClearSelectionOnComplete(clearSelectionOnComplete: Boolean) = apply { this.clearSelectionOnComplete = clearSelectionOnComplete }
 		fun setItemViewCacheSize(itemViewCacheSize: Int) = apply { this.itemViewCacheSize = itemViewCacheSize }
 		fun setThumbnailScale(thumbnailScale: Float) = apply { this.thumbnailScale = thumbnailScale }
+		fun setPrefetchItemCount(prefetchItemCount: Int) = apply { this.prefetchItemCount = prefetchItemCount } // 새로운 메서드 추가
+		fun setMaxRecycledViews(maxRecycledViews: Int) = apply { this.maxRecycledViews = maxRecycledViews } // 새로운 메서드 추가
 		
 		fun build(): PickerConfig {
 			return PickerConfig(
@@ -51,7 +56,9 @@ data class PickerConfig(
 				maxSelection = maxSelection,
 				clearSelectionOnComplete = clearSelectionOnComplete,
 				itemViewCacheSize = itemViewCacheSize,
-				thumbnailScale = thumbnailScale
+				thumbnailScale = thumbnailScale,
+				prefetchItemCount = prefetchItemCount, // 새로운 필드 추가
+				maxRecycledViews = maxRecycledViews // 새로운 필드 추가
 			)
 		}
 		
@@ -60,3 +67,4 @@ data class PickerConfig(
 		}
 	}
 }
+
